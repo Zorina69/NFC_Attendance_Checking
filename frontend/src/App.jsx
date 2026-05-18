@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 function App() {
@@ -8,6 +8,17 @@ function App() {
   const [manualUid, setManualUid] = useState("");
   const ndefReaderRef = useRef(null);
   const timeoutRef = useRef(null);
+
+  // Auto-check attendance if UID is in URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const uidFromUrl = params.get("uid");
+
+    if (uidFromUrl) {
+      setIsLoading(true);
+      checkAttendance(uidFromUrl);
+    }
+  }, []);
 
   const checkAttendance = async (uid) => {
     try {
@@ -132,6 +143,9 @@ function App() {
         </button>
         <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
           Available on Android Chrome or compatible devices
+        </p>
+        <p style={{ fontSize: "11px", color: "#999", marginTop: "8px", fontStyle: "italic" }}>
+          💡 Tip: Store this URL in your NFC cards: {window.location.origin}?uid=YOUR_UID
         </p>
       </div>
 
