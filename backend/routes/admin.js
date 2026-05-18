@@ -7,6 +7,8 @@ router.get("/records", async (req, res) => {
   try {
     const { date, user_id } = req.query;
 
+    console.log("Admin /records endpoint called with filters:", { date, user_id });
+
     let query = supabase
       .from("attendance")
       .select(`
@@ -33,12 +35,16 @@ router.get("/records", async (req, res) => {
 
     const { data, error } = await query;
 
+    console.log("Records query result:", { dataCount: data ? data.length : 0, error });
+
     if (error) {
+      console.error("Records query error:", error);
       return res.status(500).json({ message: "Database error", error: error.message });
     }
 
     return res.json(data);
   } catch (error) {
+    console.error("Records endpoint error:", error);
     return res.status(500).json({ message: "Server error", error: error.message });
   }
 });

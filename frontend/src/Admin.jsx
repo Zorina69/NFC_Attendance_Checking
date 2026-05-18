@@ -38,15 +38,20 @@ function Admin() {
   const loadData = async () => {
     setLoading(true);
     try {
+      console.log("Loading admin data from:", apiUrl);
+      
       // Load users
       const usersRes = await axios.get(`${apiUrl}/admin/users`);
+      console.log("Users loaded:", usersRes.data);
       setUsers(usersRes.data);
 
       // Load attendance records
       const recordsRes = await axios.get(`${apiUrl}/admin/records`);
+      console.log("Records loaded:", recordsRes.data);
       setRecords(recordsRes.data);
     } catch (err) {
-      setError("Failed to load data");
+      console.error("Load data error:", err);
+      setError(`Failed to load data: ${err.message}`);
     } finally {
       setLoading(false);
     }
