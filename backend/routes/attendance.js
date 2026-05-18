@@ -54,8 +54,7 @@ router.post("/check", async (req, res) => {
     const { error: attendanceError } = await supabase
       .from("attendance")
       .insert({
-        user_id: user.id,
-        created_at: new Date().toISOString()
+        user_id: user.id
       });
 
     console.log("Insert result - Error:", attendanceError);
