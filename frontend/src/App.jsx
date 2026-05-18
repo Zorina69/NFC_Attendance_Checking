@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import Admin from "./Admin";
 
 function App() {
+  const [page, setPage] = useState("staff");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -121,91 +123,130 @@ function App() {
   };
 
   return (
-    <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Makerspace Attendance</h1>
-
-      {/* NFC Scan Section */}
-      <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-        <h2 style={{ fontSize: "16px", marginTop: 0 }}>Option 1: Scan NFC Card</h2>
+    <>
+      {/* Navigation */}
+      <div style={{ backgroundColor: "#f8f9fa", padding: "10px 20px", borderBottom: "1px solid #dee2e6", display: "flex", gap: "10px", justifyContent: "center" }}>
         <button 
-          onClick={scanCard} 
-          disabled={isLoading}
+          onClick={() => setPage("staff")}
           style={{
-            padding: "10px 20px",
-            fontSize: "14px",
-            backgroundColor: "#007AFF",
+            padding: "8px 16px",
+            backgroundColor: page === "staff" ? "#007bff" : "#6c757d",
             color: "white",
             border: "none",
-            borderRadius: "5px",
-            cursor: isLoading ? "not-allowed" : "pointer",
-            opacity: isLoading ? 0.6 : 1
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px"
           }}
         >
-          {isLoading ? "Scanning... (30s timeout)" : "Scan NFC Card"}
+          Staff
         </button>
-        <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
-          Available on Android Chrome or compatible devices
-        </p>
-        <p style={{ fontSize: "11px", color: "#999", marginTop: "8px", fontStyle: "italic" }}>
-          💡 Tip: Store this URL in your NFC cards: {window.location.origin}?uid=YOUR_UID
-        </p>
+        <button 
+          onClick={() => setPage("admin")}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: page === "admin" ? "#007bff" : "#6c757d",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px"
+          }}
+        >
+          Admin
+        </button>
       </div>
 
-      {/* Manual UID Input Section */}
-      <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-        <h2 style={{ fontSize: "16px", marginTop: 0 }}>Option 2: Enter UID Manually</h2>
-        <form onSubmit={handleManualSubmit}>
-          <input
-            type="text"
-            placeholder="Enter NFC Card UID"
-            value={manualUid}
-            onChange={(e) => setManualUid(e.target.value)}
-            disabled={isLoading}
-            style={{
-              width: "100%",
-              padding: "10px",
-              fontSize: "14px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              marginBottom: "10px",
-              boxSizing: "border-box"
-            }}
-          />
-          <button 
-            type="submit" 
-            disabled={isLoading || !manualUid.trim()}
-            style={{
-              padding: "10px 20px",
-              fontSize: "14px",
-              backgroundColor: "#34C759",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: isLoading || !manualUid.trim() ? "not-allowed" : "pointer",
-              opacity: isLoading || !manualUid.trim() ? 0.6 : 1,
-              width: "100%"
-            }}
-          >
-            Check Attendance
-          </button>
-        </form>
-        <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
-          Example UID: 04:A1:2B:3C
-        </p>
-      </div>
+      {/* Page Content */}
+      {page === "staff" ? (
+        <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px", fontFamily: "Arial, sans-serif" }}>
+          <h1>Makerspace Attendance</h1>
 
-      {/* Results Section */}
-      {message && (
-        <p style={{ padding: "10px", backgroundColor: "#D1F3D1", color: "#006600", borderRadius: "5px", marginTop: "15px" }}>
-          ✓ {message}
-        </p>
+          {/* NFC Scan Section */}
+          <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
+            <h2 style={{ fontSize: "16px", marginTop: 0 }}>Option 1: Scan NFC Card</h2>
+            <button 
+              onClick={scanCard} 
+              disabled={isLoading}
+              style={{
+                padding: "10px 20px",
+                fontSize: "14px",
+                backgroundColor: "#007AFF",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.6 : 1
+              }}
+            >
+              {isLoading ? "Scanning... (30s timeout)" : "Scan NFC Card"}
+            </button>
+            <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
+              Available on Android Chrome or compatible devices
+            </p>
+            <p style={{ fontSize: "11px", color: "#999", marginTop: "8px", fontStyle: "italic" }}>
+              💡 Tip: Store this URL in your NFC cards: {window.location.origin}?uid=YOUR_UID
+            </p>
+          </div>
+
+          {/* Manual UID Input Section */}
+          <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
+            <h2 style={{ fontSize: "16px", marginTop: 0 }}>Option 2: Enter UID Manually</h2>
+            <form onSubmit={handleManualSubmit}>
+              <input
+                type="text"
+                placeholder="Enter NFC Card UID"
+                value={manualUid}
+                onChange={(e) => setManualUid(e.target.value)}
+                disabled={isLoading}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  fontSize: "14px",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  marginBottom: "10px",
+                  boxSizing: "border-box"
+                }}
+              />
+              <button 
+                type="submit" 
+                disabled={isLoading || !manualUid.trim()}
+                style={{
+                  padding: "10px 20px",
+                  fontSize: "14px",
+                  backgroundColor: "#34C759",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: isLoading || !manualUid.trim() ? "not-allowed" : "pointer",
+                  opacity: isLoading || !manualUid.trim() ? 0.6 : 1,
+                  width: "100%"
+                }}
+              >
+                Check Attendance
+              </button>
+            </form>
+            <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
+              Example UID: 04:A1:2B:3C
+            </p>
+          </div>
+
+          {/* Results Section */}
+          {message && (
+            <p style={{ padding: "10px", backgroundColor: "#D1F3D1", color: "#006600", borderRadius: "5px", marginTop: "15px" }}>
+              ✓ {message}
+            </p>
+          )}
+          {error && (
+            <p style={{ padding: "10px", backgroundColor: "#FFD7D7", color: "#990000", borderRadius: "5px", marginTop: "15px" }}>
+              ✗ {error}
+            </p>
+          )}
+        </div>
+      ) : (
+        <Admin />
       )}
-      {error && (
-        <p style={{ padding: "10px", backgroundColor: "#FFD7D7", color: "#990000", borderRadius: "5px", marginTop: "15px" }}>
-          ✗ {error}
-        </p>
-      )}
-    </div>
+    </>
   );
 }
 

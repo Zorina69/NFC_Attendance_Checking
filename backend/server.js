@@ -6,6 +6,7 @@ const path = require("path");
 const attendanceRoutes = require(path.join(__dirname, "./routes/attendance"));
 const borrowRoutes = require(path.join(__dirname, "./routes/borrow"));
 const userRoutes = require(path.join(__dirname, "./routes/users"));
+const adminRoutes = require(path.join(__dirname, "./routes/admin"));
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/attendance", attendanceRoutes);
 app.use("/borrow", borrowRoutes);
 app.use("/users", userRoutes);
+app.use("/admin", adminRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on port 5000");
