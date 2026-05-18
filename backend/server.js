@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
-const attendanceRoutes = require("./routes/attendance");
-const borrowRoutes = require("./routes/borrow");
-const userRoutes = require("./routes/users");
+// Resolve routes relative to this file's location
+const attendanceRoutes = require(path.join(__dirname, "./routes/attendance"));
+const borrowRoutes = require(path.join(__dirname, "./routes/borrow"));
+const userRoutes = require(path.join(__dirname, "./routes/users"));
 
 const app = express();
 
@@ -19,6 +21,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+console.log("Routes loaded successfully");
+console.log("Mounting /attendance routes");
+console.log("Mounting /borrow routes");
+console.log("Mounting /users routes");
 
 app.use("/attendance", attendanceRoutes);
 app.use("/borrow", borrowRoutes);
