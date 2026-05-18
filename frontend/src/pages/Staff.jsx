@@ -41,7 +41,7 @@ function Staff() {
 
   return (
     <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Makerspace Attendance</h1>
+      <h2>Makerspace Attendance</h2>
 
       {/* Result Section */}
       <div style={{ marginTop: "40px", padding: "20px", border: "2px solid #ddd", borderRadius: "8px", textAlign: "center", minHeight: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
