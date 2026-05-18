@@ -50,6 +50,7 @@ router.post("/check", async (req, res) => {
     const user = users[0];
 
     // Record attendance
+    console.log("Attempting to insert attendance for user_id:", user.id);
     const { error: attendanceError } = await supabase
       .from("attendance")
       .insert({
@@ -57,7 +58,10 @@ router.post("/check", async (req, res) => {
         created_at: new Date().toISOString()
       });
 
+    console.log("Insert result - Error:", attendanceError);
+    
     if (attendanceError) {
+      console.log("Attendance insert failed:", JSON.stringify(attendanceError));
       return res.status(500).json({ message: "Failed to record attendance", error: attendanceError.message });
     }
 
