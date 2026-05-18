@@ -161,87 +161,28 @@ function App() {
         <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px", fontFamily: "Arial, sans-serif" }}>
           <h1>Makerspace Attendance</h1>
 
-          {/* NFC Scan Section */}
-          <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-            <h2 style={{ fontSize: "16px", marginTop: 0 }}>Option 1: Scan NFC Card</h2>
-            <button 
-              onClick={scanCard} 
-              disabled={isLoading}
-              style={{
-                padding: "10px 20px",
-                fontSize: "14px",
-                backgroundColor: "#007AFF",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: isLoading ? "not-allowed" : "pointer",
-                opacity: isLoading ? 0.6 : 1
-              }}
-            >
-              {isLoading ? "Scanning... (30s timeout)" : "Scan NFC Card"}
-            </button>
-            <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
-              Available on Android Chrome or compatible devices
-            </p>
-            <p style={{ fontSize: "11px", color: "#999", marginTop: "8px", fontStyle: "italic" }}>
-              💡 Tip: Store this URL in your NFC cards: {window.location.origin}?uid=YOUR_UID
-            </p>
+          {/* Result Section */}
+          <div style={{ marginTop: "40px", padding: "20px", border: "2px solid #ddd", borderRadius: "8px", textAlign: "center", minHeight: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {isLoading ? (
+              <p style={{ fontSize: "16px", color: "#666" }}>Processing...</p>
+            ) : message ? (
+              <p style={{ padding: "15px", backgroundColor: "#D1F3D1", color: "#006600", borderRadius: "5px", fontSize: "18px", fontWeight: "bold", width: "100%" }}>
+                ✓ {message}
+              </p>
+            ) : error ? (
+              <p style={{ padding: "15px", backgroundColor: "#FFD7D7", color: "#990000", borderRadius: "5px", fontSize: "18px", fontWeight: "bold", width: "100%" }}>
+                ✗ {error}
+              </p>
+            ) : (
+              <p style={{ fontSize: "16px", color: "#999", fontStyle: "italic" }}>
+                Scan your NFC card to check in
+              </p>
+            )}
           </div>
 
-          {/* Manual UID Input Section */}
-          <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-            <h2 style={{ fontSize: "16px", marginTop: 0 }}>Option 2: Enter UID Manually</h2>
-            <form onSubmit={handleManualSubmit}>
-              <input
-                type="text"
-                placeholder="Enter NFC Card UID"
-                value={manualUid}
-                onChange={(e) => setManualUid(e.target.value)}
-                disabled={isLoading}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  fontSize: "14px",
-                  border: "1px solid #ccc",
-                  borderRadius: "5px",
-                  marginBottom: "10px",
-                  boxSizing: "border-box"
-                }}
-              />
-              <button 
-                type="submit" 
-                disabled={isLoading || !manualUid.trim()}
-                style={{
-                  padding: "10px 20px",
-                  fontSize: "14px",
-                  backgroundColor: "#34C759",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: isLoading || !manualUid.trim() ? "not-allowed" : "pointer",
-                  opacity: isLoading || !manualUid.trim() ? 0.6 : 1,
-                  width: "100%"
-                }}
-              >
-                Check Attendance
-              </button>
-            </form>
-            <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
-              Example UID: 04:A1:2B:3C
-            </p>
-          </div>
-
-          {/* Results Section */}
-          {message && (
-            <p style={{ padding: "10px", backgroundColor: "#D1F3D1", color: "#006600", borderRadius: "5px", marginTop: "15px" }}>
-              ✓ {message}
-            </p>
-          )}
-          {error && (
-            <p style={{ padding: "10px", backgroundColor: "#FFD7D7", color: "#990000", borderRadius: "5px", marginTop: "15px" }}>
-              ✗ {error}
-            </p>
-          )}
+          <p style={{ fontSize: "12px", color: "#666", marginTop: "20px", textAlign: "center", fontStyle: "italic" }}>
+            💡 Scan your NFC card to record attendance
+          </p>
         </div>
       ) : (
         <Admin />
