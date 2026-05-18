@@ -9,7 +9,11 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5173"],
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://nfc-attendance-checking.vercel.app"
+  ],
   credentials: true
 };
 
