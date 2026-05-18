@@ -22,7 +22,6 @@ function App() {
 
   const checkAttendance = async (uid) => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("API URL:", apiUrl); // DEBUG
     
     try {
       const response = await axios.post(

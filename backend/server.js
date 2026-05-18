@@ -22,11 +22,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-console.log("Routes loaded successfully");
-console.log("Mounting /attendance routes");
-console.log("Mounting /borrow routes");
-console.log("Mounting /users routes");
-
 app.use("/attendance", attendanceRoutes);
 app.use("/borrow", borrowRoutes);
 app.use("/users", userRoutes);
