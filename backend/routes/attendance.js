@@ -16,8 +16,18 @@ router.post("/check", async (req, res) => {
       return res.status(400).json({ message: "UID is required" });
     }
 
-    // Check if user exists
+    // Check if user exists - also try selecting all to debug
     console.log("Querying database for UID:", uid);
+    
+    // First, try to get ALL users to see if table is accessible
+    const { data: allUsers, error: allError } = await supabase
+      .from("users")
+      .select("*");
+    
+    console.log("All users query - Count:", allUsers ? allUsers.length : 0);
+    console.log("All users query - Error:", allError);
+    
+    // Now query for specific UID
     const { data: users, error: userError } = await supabase
       .from("users")
       .select("*")
