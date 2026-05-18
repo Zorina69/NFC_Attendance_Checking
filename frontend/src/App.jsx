@@ -5,8 +5,43 @@ function App() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [manualUid, setManualUid] = useState("");
   const ndefReaderRef = useRef(null);
   const timeoutRef = useRef(null);
+
+  const checkAttendance = async (uid) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/attendance/check`,
+        { uid }
+      );
+
+      setMessage(response.data.message);
+      setError("");
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || err.message || "Error checking attendance";
+      setError(errorMsg);
+      setMessage("");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleManualSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!manualUid.trim()) {
+      setError("Please enter a UID");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+    setMessage("");
+
+    await checkAttendance(manualUid);
+    setManualUid("");
+  };
 
   const scanCard = async () => {
     setIsLoading(true);
@@ -42,23 +77,8 @@ function App() {
           clearTimeout(timeoutRef.current);
         }
 
-        try {
-          const uid = event.serialNumber;
-
-          const response = await axios.post(
-            `${import.meta.env.VITE_API_URL}/attendance/check`,
-            { uid }
-          );
-
-          setMessage(response.data.message);
-          setError("");
-        } catch (err) {
-          const errorMsg = err.response?.data?.message || err.message || "Error checking attendance";
-          setError(errorMsg);
-          setMessage("");
-        } finally {
-          setIsLoading(false);
-        }
+        const uid = event.serialNumber;
+        await checkAttendance(uid);
       };
 
       ndef.onreadingerror = () => {
@@ -88,15 +108,87 @@ function App() {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h1>Makerspace Attendance</h1>
 
-      <button onClick={scanCard} disabled={isLoading}>
-        {isLoading ? "Scanning... (30s timeout)" : "Scan NFC Card"}
-      </button>
+      {/* NFC Scan Section */}
+      <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
+        <h2 style={{ fontSize: "16px", marginTop: 0 }}>Option 1: Scan NFC Card</h2>
+        <button 
+          onClick={scanCard} 
+          disabled={isLoading}
+          style={{
+            padding: "10px 20px",
+            fontSize: "14px",
+            backgroundColor: "#007AFF",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: isLoading ? "not-allowed" : "pointer",
+            opacity: isLoading ? 0.6 : 1
+          }}
+        >
+          {isLoading ? "Scanning... (30s timeout)" : "Scan NFC Card"}
+        </button>
+        <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
+          Available on Android Chrome or compatible devices
+        </p>
+      </div>
 
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {/* Manual UID Input Section */}
+      <div style={{ marginBottom: "30px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
+        <h2 style={{ fontSize: "16px", marginTop: 0 }}>Option 2: Enter UID Manually</h2>
+        <form onSubmit={handleManualSubmit}>
+          <input
+            type="text"
+            placeholder="Enter NFC Card UID"
+            value={manualUid}
+            onChange={(e) => setManualUid(e.target.value)}
+            disabled={isLoading}
+            style={{
+              width: "100%",
+              padding: "10px",
+              fontSize: "14px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              marginBottom: "10px",
+              boxSizing: "border-box"
+            }}
+          />
+          <button 
+            type="submit" 
+            disabled={isLoading || !manualUid.trim()}
+            style={{
+              padding: "10px 20px",
+              fontSize: "14px",
+              backgroundColor: "#34C759",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: isLoading || !manualUid.trim() ? "not-allowed" : "pointer",
+              opacity: isLoading || !manualUid.trim() ? 0.6 : 1,
+              width: "100%"
+            }}
+          >
+            Check Attendance
+          </button>
+        </form>
+        <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
+          Example UID: 04:A1:2B:3C
+        </p>
+      </div>
+
+      {/* Results Section */}
+      {message && (
+        <p style={{ padding: "10px", backgroundColor: "#D1F3D1", color: "#006600", borderRadius: "5px", marginTop: "15px" }}>
+          ✓ {message}
+        </p>
+      )}
+      {error && (
+        <p style={{ padding: "10px", backgroundColor: "#FFD7D7", color: "#990000", borderRadius: "5px", marginTop: "15px" }}>
+          ✗ {error}
+        </p>
+      )}
     </div>
   );
 }
